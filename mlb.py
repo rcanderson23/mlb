@@ -33,7 +33,7 @@ class Scoreboard:
         game_list = []
         for game in self.games:
             for team in teams:
-                if team in (game.game_info["home_name_abbrev"], game.game_info["away_name_abbrev"]):
+                if team.upper() in (game.game_info["home_name_abbrev"], game.game_info["away_name_abbrev"]):
                     game_list.append(game)
         return game_list
 
