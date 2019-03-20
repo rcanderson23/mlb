@@ -20,4 +20,17 @@ Example
  | Rangers     |   0|   0|   0|
   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
+-> ./mlb.py -h
+
+usage: mlb.py [-h] [-t TEAM] [-l LEAGUE]
+
+Prints MLB scores
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -t TEAM, --team TEAM  Prints out teams given. They should be given as their
+                        abbreviation.
+  -l LEAGUE, --league LEAGUE
+                        Prints games from either AL or NL. A for American, N
+                        for National
 ```
