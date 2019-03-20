@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 import argparse
 import datetime
-import requests
 import sys
+import requests
+
 
 class Scoreboard:
     """
@@ -105,6 +106,8 @@ def main(args):
                             "{:02d}".format(day.month),
                             "{:02d}".format(day.day))
 
+    games = scoreboard.games
+
     if args.league:
         games = scoreboard.get_games_by_league(args.league.upper()[0])
 
@@ -132,7 +135,7 @@ def arg_parse():
         print("Unable to use league and team arguments together")
         sys.exit(1)
 
-    if args.league not in ('NL', 'nl', 'N', 'n', 'AL', 'al', 'A', 'a'):
+    if args.league and args.league not in ('NL', 'nl', 'N', 'n', 'AL', 'al', 'A', 'a'):
         print("Must select AL or NL")
         sys.exit(1)
 
