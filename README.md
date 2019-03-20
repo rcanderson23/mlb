@@ -20,6 +20,8 @@ Example
  | Rangers     |   0|   0|   0|
   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
+```
+```
 -> ./mlb.py -h
 
 usage: mlb.py [-h] [-t TEAM] [-l LEAGUE]
