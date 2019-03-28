@@ -37,6 +37,16 @@ class Scoreboard:
                     game_list.append(game)
         return game_list
 
+    def get_in_progress_games(self):
+        """
+        Returns games are currently in progress
+        """
+        game_list = []
+        for game in self.games:
+            if game.game_info["status"]["status"] == "In Progress":
+                game_list.append(game)
+        return game_list
+
 
 class Game:
     """
@@ -114,6 +124,9 @@ def main(args):
     if args.team:
         games = scoreboard.get_games_by_team(args.team)
 
+    if args.in_progress:
+        games = scoreboard.get_in_progress_games()
+
     for game in games:
         print(game.game_board())
 
@@ -129,6 +142,8 @@ def arg_parse():
     parser.add_argument('-l', '--league',
                         help='Prints games from either AL or NL. A for American, N for National')
 
+    parser.add_argument('-p', '--in-progress', action='store_true',
+                        help='Prints games that are currently in progress')
     args = parser.parse_args()
 
     if args.league and args.team:
