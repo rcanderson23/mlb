@@ -22,7 +22,7 @@ class Scoreboard:
         """
         game_list = []
         for game in self.games:
-            if league in game.game_info["league"]:
+            if league in game.league:
                 game_list.append(game)
         return game_list
 
@@ -33,7 +33,7 @@ class Scoreboard:
         game_list = []
         for game in self.games:
             for team in teams:
-                if team.upper() in (game.game_info["home_name_abbrev"], game.game_info["away_name_abbrev"]):
+                if team.upper() in (game.home_team_abbrev, game.away_team_abbrev):
                     game_list.append(game)
         return game_list
 
@@ -43,7 +43,7 @@ class Scoreboard:
         """
         game_list = []
         for game in self.games:
-            if game.game_info["status"]["status"] == "In Progress":
+            if game.game_status["status"] == "In Progress":
                 game_list.append(game)
         return game_list
 
@@ -53,48 +53,58 @@ class Game:
     Class that stores game information
     """
     def __init__(self, **game_info):
-        self.game_info = game_info
+        # self.game_info = game_info
+
+        self.away_team = game_info["away_team_name"]
+        self.away_team_abbrev = game_info["away_name_abbrev"]
+        self.home_team = game_info["home_team_name"]
+        self.home_team_abbrev = game_info["home_name_abbrev"]
+        self.game_status = game_info["status"]
+        self.game_time = game_info["time"]
+        self.game_time_zone = game_info["time_zone"]
+        self.league = game_info["league"]
+        try:
+            self.linescore = game_info["linescore"]
+        except KeyError:
+            self.linescore = None
 
     def game_board(self):
         """
         Returns string of individual game score
         """
-
-        game_state = self.game_info["status"]["ind"]
-
-        if game_state == "I":
-            game_status = "{0} {1}".format(self.game_info["status"]["inning_state"],
-                                           self.game_info["status"]["inning"])
-        elif game_state in ('P', 'S'):
-            game_status = "{0} {1}".format(self.game_info["time"],
-                                           self.game_info["time_zone"])
-        else:
-            game_status = game_state
-
         top_line = "_".ljust(28, "_")
         mid_line = "-".ljust(28, "-")
         bottom_line = "‾".ljust(28, "‾")
-        away_team_name = self.game_info["away_team_name"].ljust(12)
-        home_team_name = self.game_info["home_team_name"].ljust(12)
+        away_team_name = self.away_team.ljust(12)
+        home_team_name = self.home_team.ljust(12)
 
-        try:
-            if self.game_info["status"]["status"] in ('Cancelled', 'Postponed'):
+        away_runs = "0".rjust(3)
+        away_hits = "0".rjust(3)
+        away_errors = "0".rjust(3)
+        home_runs = "0".rjust(3)
+        home_hits = "0".rjust(3)
+        home_errors = "0".rjust(3)
+
+        if self.game_status["ind"] == "I":
+            game_status = "{0} {1}".format(self.game_status["inning_state"],
+                                           self.game_status["inning"])
+        elif self.game_status["ind"] in ('P', 'S'):
+            game_status = "{0} {1}".format(self.game_time,
+                                           self.game_time_zone)
+        else:
+            game_status = self.game_status["ind"]
+
+        if self.linescore:
+            if self.game_status["status"] in ('Cancelled', 'Postponed'):
                 away_runs = "".rjust(3)
                 home_runs = "".rjust(3)
             else:
-                away_runs = self.game_info["linescore"]["r"]["away"].rjust(3)
-                home_runs = self.game_info["linescore"]["r"]["home"].rjust(3)
-            away_hits = self.game_info["linescore"]["h"]["away"].rjust(3)
-            away_errors = self.game_info["linescore"]["e"]["away"].rjust(3)
-            home_hits = self.game_info["linescore"]["h"]["home"].rjust(3)
-            home_errors = self.game_info["linescore"]["e"]["home"].rjust(3)
-        except KeyError:
-            away_runs = "0".rjust(3)
-            away_hits = "0".rjust(3)
-            away_errors = "0".rjust(3)
-            home_runs = "0".rjust(3)
-            home_hits = "0".rjust(3)
-            home_errors = "0".rjust(3)
+                away_runs = self.linescore["r"]["away"].rjust(3)
+                home_runs = self.linescore["r"]["home"].rjust(3)
+            away_hits = self.linescore["h"]["away"].rjust(3)
+            away_errors = self.linescore["e"]["away"].rjust(3)
+            home_hits = self.linescore["h"]["home"].rjust(3)
+            home_errors = self.linescore["e"]["home"].rjust(3)
 
         game = f'''\
   {top_line}\n \
